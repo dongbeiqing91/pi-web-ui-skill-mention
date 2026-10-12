@@ -10,9 +10,27 @@ $code-review $frontend-design 帮我检查这个页面
 
 插件只插入纯文本 `$技能名`，不发送消息、不注入技能正文、不注册 AI 工具。技能展开由你已有的 **pi-skills-mention** 负责；请确保它在 pi-web-ui 使用的 Pi 运行时里启用。
 
+## 前置依赖
+
+**要让 `$技能名` 真正加载技能指令，请先给 Pi 安装并启用 `pi-skills-mention`，再安装本 UI 插件。**
+
+- **宿主：** xing-shuyin/pi-web-ui，已核对并测试版本 `0.104.4`，Node.js `22.19+`。
+- **技能展开：** `pi-skills-mention` 必须在 pi-web-ui 使用的同一 Pi 运行时和配置目录中启用。
+- **技能文件：** 要引用的技能必须已安装，且该运行时能够加载它们。额外来源需在本插件的 `skillPaths` 中同步配置。
+
+在运行 Pi 和 pi-web-ui 的机器上安装扩展：
+
+```sh
+pi install npm:pi-skills-mention
+```
+
+安装后重启 Pi，或在 pi-web-ui 使用的 Pi 会话中执行 `/reload`，重新加载扩展。如果服务设置了自定义 `PI_CODING_AGENT_DIR`，安装时也要使用同一配置目录。安装到另一个 Pi 环境中，不会让当前网页会话启用该扩展。
+
+**没有 `pi-skills-mention`，补全列表仍可显示并插入 `$技能名`，但本插件不会将这些词元展开为技能指令。** 弹窗正常不代表后端展开已生效。
+
 ## 安装
 
-已核对并测试 **xing-shuyin/pi-web-ui 0.104.4**。Node.js 使用宿主要求的 **22.19+**。插件为原生 ESM，无需构建或安装运行依赖。
+完成上述前置准备后，再安装 UI 插件。它使用原生 ESM，无需构建或安装额外的运行依赖。
 
 推荐直接从 GitHub 安装：
 

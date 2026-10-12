@@ -10,9 +10,27 @@ $code-review $frontend-design Review this page for me
 
 The plugin inserts plain `$skill-name` text. It does not send messages, inject skill instructions, or register agent tools. Your existing **pi-skills-mention** extension handles skill expansion; enable it in the Pi runtime used by pi-web-ui.
 
+## Prerequisites
+
+**Install and enable `pi-skills-mention` in Pi before installing this UI plugin if you want `$skill-name` mentions to load skill instructions.**
+
+- **Host:** xing-shuyin/pi-web-ui, checked and tested with version `0.104.4`, running on Node.js `22.19+`.
+- **Skill expansion:** `pi-skills-mention` must be enabled in the same Pi runtime and agent configuration directory used by pi-web-ui.
+- **Skills:** the skills you intend to mention must be installed and available to that runtime. Match any additional sources in this plugin's `skillPaths` settings.
+
+On the machine running Pi and pi-web-ui, install the extension:
+
+```sh
+pi install npm:pi-skills-mention
+```
+
+Then restart Pi or run `/reload` in the Pi session used by pi-web-ui to reload extensions. If your service uses a custom `PI_CODING_AGENT_DIR`, install into that same configuration directory. Installing the extension into a different Pi environment will not enable it for your web session.
+
+**Without `pi-skills-mention`, the UI can still display suggestions and insert `$skill-name`, but this plugin will not expand those mentions into skill instructions.** A working popup alone does not confirm backend expansion.
+
 ## Installation
 
-Checked and tested with **xing-shuyin/pi-web-ui 0.104.4**. Use **Node.js 22.19+**, as required by the host. This plugin uses native ESM and needs no build step or runtime dependency installation.
+After completing the prerequisites above, install the UI plugin. It uses native ESM and needs no build step or additional runtime dependencies.
 
 Install directly from GitHub:
 
