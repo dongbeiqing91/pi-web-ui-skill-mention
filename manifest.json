@@ -1,0 +1,42 @@
+{
+  "id": "skill-mention",
+  "name": "$skill 自动补全",
+  "version": "0.1.0",
+  "description": "聊天输入框的 $skill 补全；仅插入词元，不展开技能。",
+  "apiVersion": 2,
+  "permissions": ["ui", "dom", "http", "fs:read"],
+  "requires": { "hostApi": 2, "families": ["dom", "http"] },
+  "engines": { "pi-web-ui": ">=0.104.4" },
+  "view": false,
+  "preload": true,
+  "settings": [
+    {
+      "key": "skillPaths",
+      "type": "text",
+      "label": "额外技能路径（JSON 数组）",
+      "default": "[]",
+      "hint": "例如 [\"/path/to/skills\"]。与 pi-skills-mention 的来源保持一致。"
+    },
+    {
+      "key": "excludedSkills",
+      "type": "text",
+      "label": "排除技能名（JSON 数组）",
+      "default": "[]",
+      "hint": "补全目录独立于宿主运行态；这里排除禁用技能。"
+    },
+    {
+      "key": "catalog",
+      "type": "text",
+      "label": "手动技能目录（JSON 数组）",
+      "default": "[]",
+      "hint": "非空时替代自动发现，例如 [{\"name\":\"code-review\",\"description\":\"代码审查\"}]。"
+    },
+    {
+      "key": "projectCwd",
+      "type": "text",
+      "label": "固定项目目录（可选）",
+      "default": "",
+      "hint": "留空跟随宿主插件工作目录；多浏览器同时用不同项目时可固定目录。"
+    }
+  ]
+}

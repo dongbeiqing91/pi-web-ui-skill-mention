@@ -1,0 +1,12 @@
+node_modules/
+.DS_Store
+*.log
+coverage/
+test-results/
+playwright-report/
+.env
+.env.*
+!.env.example
+.pi-source.json
+storage.json
+config.json
