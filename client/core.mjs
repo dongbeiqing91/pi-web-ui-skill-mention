@@ -30,7 +30,18 @@ export function normalizeSkills(skills) {
 
 export function filterSkills(skills, query) {
   const q = query.toLowerCase();
-  return skills.filter((s) => s.name.toLowerCase().startsWith(q));
+  if (!q) return skills;
+  // Rank exact matches first, then name prefixes, then any name containing
+  // the query. Catalog order (alphabetical) is kept within each rank.
+  const ranked = [];
+  skills.forEach((s, i) => {
+    const name = s.name.toLowerCase();
+    if (name === q) ranked.push({ i, rank: 0, s });
+    else if (name.startsWith(q)) ranked.push({ i, rank: 1, s });
+    else if (name.includes(q)) ranked.push({ i, rank: 2, s });
+  });
+  ranked.sort((a, b) => a.rank - b.rank || a.i - b.i);
+  return ranked.map((r) => r.s);
 }
 
 export function insertSkill(text, token, name) {

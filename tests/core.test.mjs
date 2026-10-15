@@ -41,6 +41,37 @@ test("multiple mentions and safe names", () => {
   assert.equal(skills.length, 2);
   assert.equal(filterSkills(skills, "CODE")[0].name, "code-review");
 });
+test("filter ranks exact, prefix, then substring matches", () => {
+  const skills = normalizeSkills([
+    { name: "jira" },
+    { name: "jira-flow" },
+    { name: "code-review" },
+    { name: "codebase-audit" },
+    { name: "commit" },
+    { name: "deploy" },
+  ]);
+  // Empty query keeps the full alphabetical catalog.
+  assert.deepEqual(
+    filterSkills(skills, "").map((s) => s.name),
+    ["code-review", "codebase-audit", "commit", "deploy", "jira", "jira-flow"],
+  );
+  // Case-insensitive; exact match ranks above prefix and substring.
+  assert.deepEqual(
+    filterSkills(skills, "JIRA").map((s) => s.name),
+    ["jira", "jira-flow"],
+  );
+  // Names containing the query are included after prefix matches.
+  assert.deepEqual(
+    filterSkills(skills, "ode").map((s) => s.name),
+    ["code-review", "codebase-audit"],
+  );
+  // Substring-only queries still match.
+  assert.deepEqual(
+    filterSkills(skills, "review").map((s) => s.name),
+    ["code-review"],
+  );
+  assert.deepEqual(filterSkills(skills, "zzz"), []);
+});
 test("manual catalog, exclusion, configuration errors", async () => {
   const host = {
     getSettings: () => ({

@@ -1,7 +1,7 @@
 {
   "id": "skill-mention",
   "name": "$skill 自动补全",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "聊天输入框的 $skill 补全；仅插入词元，不展开技能。",
   "apiVersion": 2,
   "permissions": ["ui", "dom", "http", "fs:read"],

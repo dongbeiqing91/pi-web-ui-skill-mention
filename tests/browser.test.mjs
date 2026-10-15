@@ -16,6 +16,7 @@ let mode = "ok",
 const skills = [
   { name: "code-review", description: "检查代码" },
   { name: "commit", description: "提交" },
+  { name: "docker-compose", description: "容器编排" },
   { name: "frontend-design", description: "<img src=x onerror=alert(1)>" },
 ];
 const server = createServer(async (req, res) => {
@@ -75,14 +76,14 @@ async function ready(count) {
 try {
   await page.goto(`http://127.0.0.1:${server.address().port}/pi/`);
   await ta.fill("$");
-  await ready(3);
+  await ready(4);
   assert.equal(await panel.isVisible(), true);
   await ta.press("ArrowDown");
   await ta.press("Tab");
   assert.equal(await ta.inputValue(), "$commit ");
   assert.equal(await page.locator("output").textContent(), "$commit ");
   await ta.pressSequentially("$co");
-  await ready(2);
+  await ready(3);
   await ta.press("Enter");
   assert.equal(await ta.inputValue(), "$commit $code-review ");
   assert.equal(await page.evaluate(() => window.submits), 0);
@@ -106,22 +107,28 @@ try {
     el.setSelectionRange(6, 6);
     el.dispatchEvent(new Event("select", { bubbles: true }));
   });
-  await ready(2);
+  await ready(3);
   await ta.press("Enter");
   assert.equal(await ta.inputValue(), "检查 $code-review 后文");
   await ta.fill("$co");
-  await ready(2);
+  await ready(3);
   await ta.press("ArrowUp");
   await ta.press("Tab");
-  assert.equal(await ta.inputValue(), "$commit ");
+  // Wraps to the last hit, now the substring-only match.
+  assert.equal(await ta.inputValue(), "$docker-compose ");
   await ta.fill("$fr");
   await ready(1);
   await panel.locator("button").click();
   assert.equal(await ta.inputValue(), "$frontend-design ");
+  // Substring-only query: "end" appears only inside frontend-design.
+  await ta.fill("$end");
+  await ready(1);
+  await ta.press("Tab");
+  assert.equal(await ta.inputValue(), "$frontend-design ");
   await page.locator("#other").fill("$co");
   assert.equal(await panel.isVisible(), false);
   await ta.fill("$co");
-  await ready(2);
+  await ready(3);
   await ta.evaluate((el) =>
     el.dispatchEvent(
       new CompositionEvent("compositionstart", { bubbles: true }),
@@ -141,7 +148,7 @@ try {
   await ta.evaluate((el) =>
     el.dispatchEvent(new CompositionEvent("compositionend", { bubbles: true })),
   );
-  await ready(2);
+  await ready(3);
   const bounds = await panel.boundingBox();
   assert.ok(bounds.x >= 0 && bounds.y >= 0);
   // Out-of-order metadata must not reopen a dismissed picker.
@@ -163,12 +170,12 @@ try {
   mode = "ok";
   await ta.fill("plain");
   await ta.fill("$co");
-  await ready(2);
+  await ready(3);
   // Hot reload replaces the singleton without duplicate panels or key handlers.
   await page.evaluate(
     () => import("/pi/plugins/skill-mention/client/entry.mjs?e=2"),
   );
-  await ready(2);
+  await ready(3);
   assert.equal(await panel.count(), 1);
   await ta.press("Tab");
   assert.equal(await ta.inputValue(), "$code-review ");
@@ -178,7 +185,7 @@ try {
   assert.equal(await panel.count(), 0);
   assert.deepEqual(errors, []);
   console.log(
-    "PASS: browser checks with React 19 controlled textarea; filtering, keyboard, multiple tokens, IME, errors, reload, cleanup and proxy prefix.",
+    "PASS: browser checks with React 19 controlled textarea; ranked prefix/substring filtering, keyboard, multiple tokens, IME, errors, reload, cleanup and proxy prefix.",
   );
 } finally {
   await browser.close();

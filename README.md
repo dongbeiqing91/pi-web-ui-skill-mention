@@ -2,7 +2,7 @@
 
 English | [简体中文](README.zh.md)
 
-Type `$` or `$prefix` in the chat composer to open a skill list. Results update as you type, using case-insensitive name prefixes. Use the arrow keys to select, Enter or Tab to insert, and Esc to dismiss. Mouse and touch selection are also supported, as are multiple skill mentions in one message:
+Type `$` or a partial skill name in the chat composer to open a skill list. Results update as you type, matching skill names case-insensitively: exact and prefix matches come first, followed by any skill whose name contains the query. Use the arrow keys to select, Enter or Tab to insert, and Esc to dismiss. Mouse and touch selection are also supported, as are multiple skill mentions in one message:
 
 ```text
 $code-review $frontend-design Review this page for me
@@ -93,7 +93,7 @@ These limitations do not change backend skill expansion. The skills actually loa
 ## Interaction Details
 
 - `$` must appear at the start of a message, after whitespace or a newline, or after an opening bracket. `abc$foo`, `\$foo`, and `$$foo` do not trigger completion.
-- With the caret inside a token, filtering uses the prefix to its left. Selection replaces the entire token while preserving surrounding text. A text selection does not trigger completion.
+- With the caret inside a token, filtering uses the text to the left of the caret. Selection replaces the entire token while preserving surrounding text. A text selection does not trigger completion.
 - After insertion, the caret stays after the skill token, with a space added when needed. Type another `$` to insert a second skill.
 - Enter and Tab are intercepted only when matching results are available, preventing an accidental send while choosing a skill. While loading, on catalog errors, or with no matches, the host's normal key behavior remains in effect. Modified shortcuts such as Shift+Enter retain their normal behavior.
 - Esc or clicking outside dismisses the list. Changing the token can reopen it. Completion and Enter interception are suspended during IME composition.
@@ -121,7 +121,7 @@ In the checked version, preloaded client modules have no public unload callback.
 
 ## Verification
 
-See [VERIFICATION.md](VERIFICATION.md) for the detailed record, currently in Chinese. Checks passed for the official installer, real PluginManager activation and routes, real Pi SDK metadata, six unit tests, and Chrome with a React 19 controlled textarea fixture. Prefix filtering, Tab/Enter insertion, and multiple mentions were also verified in an actual pi-web-ui 0.104.4 chat page, with no page JavaScript errors. No test chat message was sent, and final expansion by pi-skills-mention has not been verified.
+See [VERIFICATION.md](VERIFICATION.md) for the detailed record, currently in Chinese. Checks passed for the official installer, real PluginManager activation and routes, real Pi SDK metadata, seven unit tests, and Chrome with a React 19 controlled textarea fixture. Tab/Enter insertion and multiple mentions were also verified in an actual pi-web-ui 0.104.4 chat page, with no page JavaScript errors; that real-page check predates the substring matching change, so ranked filtering has not yet been re-verified there. No test chat message was sent, and final expansion by pi-skills-mention has not been verified.
 
 Development dependencies are for testing only and are not needed to install the plugin:
 
